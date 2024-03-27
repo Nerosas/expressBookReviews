@@ -8,10 +8,28 @@ const app = express();
 
 app.use(express.json());
 
-app.use("/customer",session({secret:"fingerprint_customer",resave: true, saveUninitialized: true}))
+app.use("/customer",session({secret:"fingerprint_customer",resave: true, saveUninitialized: true}));
 
 app.use("/customer/auth/*", function auth(req,res,next){
-//Write the authenication mechanism here
+    const username = req.body.username;
+    const password = req.body.password;
+
+    if (!username || !password) {
+        return res.status(404).json({message: "Error logging in"});
+    }
+
+    if (authenticatedUser(username,password)) {
+        let accessToken = jwt.sign({
+            data: password
+        }, 'access', {'expiresIn': 60 * 60});
+
+        req.session.authorization = {
+            accessToken, username
+        }
+        return res.status(200).json({message: "User successfully logged in"});
+    } else {
+        return res.status(208).json({message:"Invalid login. Check username and password."});
+    }
 });
  
 const PORT =5000;
