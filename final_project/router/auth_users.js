@@ -44,8 +44,19 @@ regd_users.post("/login", (req,res) => {
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    const isbn = req.params.isbn;
+    const review = req.body.review;
+    const user = req.body.username;
+    let book = JSON.parse(public_users.get(`/isbn/${isbn}`));
+    
+    for (const {username, bookReview} in Object.entries(book.reviews)) {
+        if (user === username) {
+            bookReview = review;
+            //todo: this would would better in a filter function.
+            //Filter to check if the username is there, if so, modify.
+            //If not, add a review.
+        }
+    }
 });
 
 module.exports.authenticated = regd_users;
