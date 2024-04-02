@@ -48,17 +48,23 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
     const review = req.body.review;
     const user = req.body.username;
     let book = JSON.parse(public_users.get(`/isbn/${isbn}`));
-    let pre_existing_book_review = book.reviews.filter((user) => {
+    let preExistingBookReview = book.reviews.filter((user) => {
         return (book.reviews.user === user);
     })
 
-    if (pre_existing_book_review.length > 0) {
+    if (preExistingBookReview.length > 0) {
         book.reviews.filter((review) => {
-            return (review != pre_existing_book_review[0]);
+            return (review != preExistingBookReview[0]);
         })
     }
 
-    book.reviews.push({user, review})
+    book.reviews.push({"user":user, "review":review});
+
+    books.filter((old_books) => {
+        return (old_books != book);
+    })
+
+    books.push(book);
 });
 
 module.exports.authenticated = regd_users;
