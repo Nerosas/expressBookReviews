@@ -43,7 +43,7 @@ regd_users.post("/login", (req,res) => {
 });
 
 // Add a book review
-regd_users.put("/auth/review/:isbn", (req, res) => {
+regd_users.put("/customer/auth/review/:isbn", (req, res) => {
     const isbn = req.params.isbn;
     const review = req.body.review;
     const user = req.body.username;
@@ -72,3 +72,4 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
 module.exports.users = users;
+module.exports.authenticatedUser = authenticatedUser;
