@@ -48,15 +48,17 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
     const review = req.body.review;
     const user = req.body.username;
     let book = JSON.parse(public_users.get(`/isbn/${isbn}`));
-    
-    for (const {username, bookReview} in Object.entries(book.reviews)) {
-        if (user === username) {
-            bookReview = review;
-            //todo: this would would better in a filter function.
-            //Filter to check if the username is there, if so, modify.
-            //If not, add a review.
-        }
+    let pre_existing_book_review = book.reviews.filter((user) => {
+        return (book.reviews.user === user);
+    })
+
+    if (pre_existing_book_review.length > 0) {
+        book.reviews.filter((review) => {
+            return (review != pre_existing_book_review[0]);
+        })
     }
+
+    book.reviews.push({user, review})
 });
 
 module.exports.authenticated = regd_users;
