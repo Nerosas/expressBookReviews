@@ -65,6 +65,8 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
     })
 
     books.push(book);
+
+    return res.status(200).json({message:"Review successfully added/modified"});
 });
 
 module.exports.authenticated = regd_users;
